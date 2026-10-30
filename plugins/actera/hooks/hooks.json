@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "node \"${PLUGIN_ROOT}/bin/actera-hook.mjs\" hook",
-            "statusMessage": "Checking with Actera",
+            "statusMessage": "Checking with Actera. A call that needs approval waits here for a reviewer.",
             "timeout": 600
           }
         ]

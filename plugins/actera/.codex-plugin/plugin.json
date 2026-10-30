@@ -1,17 +1,26 @@
 {
   "name": "actera",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Check Codex tool calls against Actera policies, hold calls that need approval, and report their outcomes",
   "author": {
     "name": "Actera"
   },
   "license": "Apache-2.0",
-  "keywords": ["actera", "policy", "approval", "codex"],
+  "keywords": [
+    "actera",
+    "policy",
+    "approval",
+    "codex"
+  ],
+  "skills": "./skills/",
   "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Actera",
     "shortDescription": "Policy checks and approvals for Codex tool calls",
+    "longDescription": "Actera checks every tool call Codex makes against your workspace policies before it runs. Monitoring records each call; Enforcing blocks what policies deny and holds calls that need a reviewer. Connect with $actera-connect.",
     "developerName": "Actera",
-    "category": "Coding"
+    "category": "Coding",
+    "websiteURL": "https://actera.dev",
+    "defaultPrompt": "Use $actera-connect to connect this Codex to Actera."
   }
 }

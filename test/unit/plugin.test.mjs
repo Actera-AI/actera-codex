@@ -29,6 +29,22 @@ test('the marketplace lists this plugin and the manifest names its hooks file', 
   const manifest = await json('plugins/actera/.codex-plugin/plugin.json')
   assert.equal(manifest.name, 'actera')
   assert.equal(manifest.hooks, './hooks/hooks.json')
+  assert.equal(manifest.skills, './skills/')
+})
+
+// Connect and status may be chosen by Codex from plain words; the skills that
+// weaken enforcement or remove the connection run only when the person invokes them.
+const explicitOnly = new Set(['mode', 'disconnect'])
+
+test('each skill uses the plugin command line, and only the person can change or remove enforcement', async () => {
+  for (const skill of ['connect', 'status', 'mode', 'disconnect']) {
+    const body = await readFile(new URL(`../../plugins/actera/skills/actera-${skill}/SKILL.md`, import.meta.url), 'utf8')
+    assert.match(body, new RegExp(`^---\nname: actera-${skill}\ndescription: .+\n---\n`))
+    assert.match(body, /bin\/actera-hook\.mjs/)
+    assert.ok(!/api.?key|ACTERA_API_KEY/i.test(body.replace(/machine key/gi, '')), `${skill} must not handle keys`)
+    const policy = await readFile(new URL(`../../plugins/actera/skills/actera-${skill}/agents/openai.yaml`, import.meta.url), 'utf8')
+    assert.match(policy, new RegExp(`allow_implicit_invocation: ${!explicitOnly.has(skill)}`))
+  }
 })
 
 test('the vendored agent-hooks files match the lock', () => {
