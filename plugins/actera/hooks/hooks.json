@@ -1,0 +1,28 @@
+{
+  "description": "Actera checks each tool call before it runs and reports its outcome afterwards.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/bin/actera-hook.mjs\" hook",
+            "statusMessage": "Checking with Actera",
+            "timeout": 600
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/bin/actera-hook.mjs\" hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "actera",
+  "plugins": [
+    {
+      "name": "actera",
+      "source": {
+        "source": "local",
+        "path": "./plugins/actera"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Coding"
+    }
+  ]
+}

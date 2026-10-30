@@ -1,0 +1,17 @@
+{
+  "name": "actera",
+  "version": "0.0.1",
+  "description": "Check Codex tool calls against Actera policies, hold calls that need approval, and report their outcomes",
+  "author": {
+    "name": "Actera"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["actera", "policy", "approval", "codex"],
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Actera",
+    "shortDescription": "Policy checks and approvals for Codex tool calls",
+    "developerName": "Actera",
+    "category": "Coding"
+  }
+}
