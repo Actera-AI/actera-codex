@@ -1,6 +1,6 @@
 {
   "name": "actera",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Check Codex tool calls against Actera policies, hold calls that need approval, and report their outcomes",
   "author": {
     "name": "Actera"
@@ -14,10 +14,11 @@
   ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Actera",
     "shortDescription": "Policy checks and approvals for Codex tool calls",
-    "longDescription": "Actera checks every tool call Codex makes against your workspace policies before it runs. Monitoring records each call; Enforcing blocks what policies deny and holds calls that need a reviewer. Connect with $actera-connect.",
+    "longDescription": "Actera checks every tool call Codex makes against your workspace policies before it runs. Monitoring records each call; Enforcing blocks what policies deny and holds calls that need a reviewer, who can approve them in Actera or, once linked, right here in Codex. Connect with $actera-connect.",
     "developerName": "Actera",
     "category": "Coding",
     "websiteURL": "https://actera.dev",

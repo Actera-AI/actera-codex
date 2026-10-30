@@ -50,14 +50,21 @@ blocked. In **Enforcing**:
 - A blocked call is denied with the reason from Actera.
 - A call that needs approval waits while Actera notifies reviewers in Actera, Slack or
   email; Codex shows "Checking with Actera" meanwhile. Approval releases the call;
-  rejection denies it with the reviewer's reason. After 540 seconds without a decision
+  rejection denies it with the reviewer's reason.
+- You can review held calls in Codex too. The first held call offers to link Codex to
+  your Actera account in the browser; after that, Codex asks you to allow each held call
+  once or deny it. Actera checks that you may approve it and records your choice, and a
+  decision made in Actera meanwhile closes the prompt. `codex exec` and the `never`
+  approval policy cannot show prompts, so there the call waits for a reviewer as above. After 540 seconds without a decision
   the call is denied with a link to review it, and an identical retry in the same
   session within an hour reuses the approval once.
 - When Actera cannot be reached, calls are denied unless you choose to fail open with
   `$actera-mode`.
 
-Codex lets a call run when a hook crashes or exceeds its timeout, so a broken
-installation fails open. For mandatory enforcement, deploy the same hooks as managed
+The check runs as an `mcp_tool` hook on the plugin's own MCP server, `actera`, because a
+command hook cannot ask anything in Codex. The model cannot see or call that server's
+tool. Codex lets a call run when a hook fails, exceeds its timeout or cannot reach the
+MCP server, so a broken installation fails open. For mandatory enforcement, deploy the same hooks as managed
 hooks in `requirements.toml`. Execution reports use each call's status from the Codex
 session transcript: `SUCCESS`, `FAILURE`, or `UNKNOWN` when the record is missing.
 

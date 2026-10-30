@@ -15,6 +15,6 @@ The plugin includes its Actera API endpoint. Do not ask for an API URL, agent ID
 
 Before connecting, tell the person what the plugin sends: each tool call's name and inputs, after it redacts sensitive fields and scans for secrets with the bundled Gitleaks. Detection is best effort; ordinary commands and file paths stay visible. Prompts and tool output are not sent.
 
-After it connects, report the mode and the evaluation-failure choice the command printed. Monitoring (the default) records every tool call and never blocks. Enforcing blocks what policies deny and holds calls that need approval until a reviewer decides in Actera, Slack or email. `$actera-mode` changes either setting.
+After it connects, report the mode and the evaluation-failure choice the command printed. Monitoring (the default) records every tool call and never blocks. Enforcing blocks what policies deny and holds calls that need approval until a reviewer decides in Actera, Slack or email, or in Codex: the first held call offers to link Codex to the person's Actera account, after which Codex asks them to allow or deny each held call. `$actera-mode` changes either setting.
 
 Then tell the person the one step Codex needs from them: open `/hooks` in Codex, trust the two Actera hooks, and start a new session. Codex does not run a plugin's hooks until they are trusted, and asks again after every plugin update. Until then no tool call is checked. `$actera-status` shows whether the hooks have run. Do not describe connecting alone as proof that tool calls reach Actera.
