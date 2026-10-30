@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 import {
   agentReadiness,
+  deliverBatch,
   disconnect,
   enqueueDecision,
-  flush,
   previousApproval,
   provisionBridge,
   recordEvaluationError,
   rememberPendingApproval,
   requestDecision,
-  wakeDelivery,
 } from '../../core/bridge.mjs'
 import { stopDelivery } from '../../core/delivery.mjs'
 import { stopScanner } from '../../core/scanner-client.mjs'
@@ -34,6 +33,14 @@ import path from 'node:path'
 // gives up a minute earlier and tells the agent how to continue.
 const holdMs = () => (Number(process.env.ACTERA_HOLD_SECONDS) || 540) * 1000
 const pollMs = () => Number(process.env.ACTERA_HOLD_POLL_MS) || 2000
+
+// Codex waits for every process a hook starts, so queued reports are sent
+// from the hook itself rather than a background worker. A failure leaves them
+// queued (with a short back-off) for the next hook or an explicit flush.
+async function deliverQueued(config, home) {
+  const result = await deliverBatch(config, { home, limit: 8, timeoutMs: 3000 })
+  if (result.error) await recordEvaluationError(new Error(`Report delivery: ${result.error}`), home)
+}
 
 function option(name) {
   const index = process.argv.indexOf(`--${name}`)
@@ -77,8 +84,8 @@ async function preToolUse(hook, config, home) {
   }
   try {
     if (request && !decision) await enqueueDecision(request, home)
-    await wakeDelivery(home)
     if (evaluationError) await recordEvaluationError(evaluationError, home)
+    await deliverQueued(config, home)
   } catch (error) {
     await recordEvaluationError(error, home).catch(() => {})
   }
@@ -111,7 +118,6 @@ async function main() {
     return
   }
   if (command === 'status') {
-    await wakeDelivery(home, { wait: true })
     process.stdout.write(JSON.stringify(await status(home), null, 2) + '\n')
     return
   }
@@ -130,7 +136,7 @@ async function main() {
   }
   if (command === 'flush') {
     if (!config) throw new Error('Run setup first')
-    const result = await flush(config, { home, force: true })
+    const result = await deliverBatch(config, { home, force: true, timeoutMs: 5000 })
     process.stdout.write(JSON.stringify(result) + '\n')
     if (result.error) process.exitCode = 1
     return
@@ -141,7 +147,7 @@ async function main() {
     if (hook.hook_event_name === 'PreToolUse') return preToolUse(hook, config, home)
     try {
       await enqueueToolOutcome(hook, config, home)
-      await wakeDelivery(home)
+      await deliverQueued(config, home)
     } catch (error) {
       await recordEvaluationError(error, home).catch(() => {})
     }

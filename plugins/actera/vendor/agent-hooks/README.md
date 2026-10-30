@@ -57,6 +57,11 @@ session transcript Codex names in the hook input; when that record is missing it
 `UNKNOWN`. Codex lets a call run when a hook crashes or times out, so enforcement holds only
 while the hook process answers.
 
+Codex 0.165 on Windows does not finish a call until every process its hook started has
+exited, so the Codex adapter starts no background processes: it sends queued reports from
+the hook itself (a few seconds at most; failures stay queued for the next hook) and runs
+the scanner once per call instead of keeping a helper alive.
+
 ## Checks
 
 Run with Node.js 22+ and Go 1.27.0:

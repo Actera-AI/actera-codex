@@ -21,6 +21,9 @@ import { runtimeSettings } from './settings.mjs'
 // identities and execution reports, and Decisions back onto Codex's
 // PreToolUse output. Codex cannot prompt from a hook, so a call that needs
 // approval is held here while a reviewer decides in Actera, Slack or email.
+// Codex (0.165, Windows) does not finish a call until every process its hook
+// started has exited, so this adapter starts no background helpers: reports
+// are sent from the hook itself and the scanner runs once per call.
 
 const MAX_HOOK_BYTES = 16 * 1024 * 1024
 const MAX_TRANSCRIPT_BYTES = 256 * 1024 * 1024
@@ -68,7 +71,9 @@ export async function activityForHook(hook, config, home = bridgeHome(), eventId
   }
   if (hook.tool_input && typeof hook.tool_input === 'object' && !Array.isArray(hook.tool_input)) {
     details.tool_input_fields = Object.keys(hook.tool_input)
-    const captured = await captureInput(hook.tool_input, config.capture, { scannerRoot: path.join(home, 'scanner') })
+    // Codex waits on every process a hook leaves running, so the scanner
+    // helper must exit before the hook does.
+    const captured = await captureInput(hook.tool_input, config.capture, { scannerRoot: path.join(home, 'scanner'), persistentScanner: false })
     details.input_capture = captured.metadata
     if (captured.parameters !== undefined) details.tool_input = captured.parameters
     if (captured.metadata.status === 'omitted') details.tool_input_omitted = captured.metadata.reason
