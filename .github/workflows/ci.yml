@@ -33,6 +33,7 @@ jobs:
         env:
           CODEX_HOME: ${{ runner.temp }}/codex-home
         run: |
+          mkdir -p "$CODEX_HOME"
           npm install --prefix .tools/codex-ci --no-audit --no-fund --no-save @openai/codex
           npm exec --prefix .tools/codex-ci -- codex plugin marketplace add ./
           npm exec --prefix .tools/codex-ci -- codex plugin add actera@actera
