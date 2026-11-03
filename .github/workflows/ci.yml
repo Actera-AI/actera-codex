@@ -1,0 +1,47 @@
+name: ci
+"on":
+  push:
+    branches:
+      - main
+  pull_request: null
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  plugin:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Vendored package, manifest, hooks and skills
+        run: npm test
+        shell: bash
+        timeout-minutes: 5
+      - name: Installed payload
+        run: npm run check:plugin
+        timeout-minutes: 5
+      - name: Install from this checkout with the Codex CLI
+        env:
+          CODEX_HOME: ${{ runner.temp }}/codex-home
+        run: |
+          mkdir -p "$CODEX_HOME"
+          npm install --prefix .tools/codex-ci --no-audit --no-fund --no-save @openai/codex
+          npm exec --prefix .tools/codex-ci -- codex plugin marketplace add ./
+          npm exec --prefix .tools/codex-ci -- codex plugin add actera@actera
+          npm exec --prefix .tools/codex-ci -- codex plugin list
+          node scripts/check-plugin.mjs "$CODEX_HOME/plugins/cache/actera/actera/$(node -p "require('./plugins/actera/.codex-plugin/plugin.json').version")"
+        shell: bash
+        timeout-minutes: 10
+    timeout-minutes: 20
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
