@@ -69,8 +69,10 @@ hooks in `requirements.toml`. Execution reports use each call's status from the 
 session transcript: `SUCCESS`, `FAILURE`, or `UNKNOWN` when the record is missing.
 
 Tool inputs are scanned locally with the bundled Gitleaks engine and sensitive fields
-are redacted before anything is sent; prompts and tool output are never sent. State
-lives under `~/.actera/codex`.
+are redacted before anything is sent; prompts and tool output are never sent. Policies
+read Codex's session details under `context.codex`, such as
+`context.codex.permission_mode` and `context.codex.cwd`. State lives under
+`~/.actera/codex`.
 
 ## Development
 
