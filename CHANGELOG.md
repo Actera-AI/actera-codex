@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- A held call no longer leaves Codex on "thinking" for up to 540 seconds when Codex cannot
+  show the review prompt (Full access, `codex exec`) or you dismiss it. The call is denied
+  at once and Codex tells you it needs approval in Actera; a retry after approval runs.
+- Vendors `@actera-ai/agent-hooks` 0.3.3.
+
 ## 0.2.0
 
 - Review held calls in Codex. The `PreToolUse` check now runs on the plugin's MCP

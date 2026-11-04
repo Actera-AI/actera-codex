@@ -5,8 +5,9 @@ report what happened afterwards. The package holds the host-neutral bridge (the
 connection, durable report queue, delivery worker, local secret redaction and
 approval reuse) and one adapter per agent host: Claude Code and Codex.
 
-Licensed under [Apache-2.0](LICENSE). The repository is private while the package
-layout settles. The Actera service requires an account.
+The [Claude Code plugin](https://github.com/Actera-AI/actera-claude-code) and the Codex
+plugin vendor it. Licensed under [Apache-2.0](LICENSE). The Actera service requires an
+account.
 
 ## Layout
 
@@ -68,8 +69,13 @@ call is held, the server asks in Codex through MCP elicitation:
 - Once linked, it asks to allow the call once or deny it. Actera checks that the person may
   review it and records the choice; an approval releases this call only.
 - The hold keeps polling meanwhile, so a review in Actera, Slack or email still decides the
-  call and withdraws the prompt. A prompt nobody answers, or one Codex declines because it
-  cannot show it (`codex exec`, approval policy `never`), leaves the call held as before.
+  call and withdraws the prompt. An open prompt nobody answers keeps the call held, and so
+  does choosing to wait for a reviewer.
+- Codex declines a prompt it cannot show (approval policy `never`, which the Codex app calls
+  Full access, and `codex exec`), and it can start the server without elicitation support.
+  In those cases, and when the person dismisses the prompt, the hold ends at once. The call
+  is denied with a reason that tells the agent to ask for approval in Actera and then retry,
+  so Codex does not sit on the hook for the full hold. The retry reuses the same Decision.
 
 Codex treats `permissionDecision: "allow"` as a hook failure, so an approved call returns
 no output and Codex's own approval rules still apply to it. The server refuses calls that
