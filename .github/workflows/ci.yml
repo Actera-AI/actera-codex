@@ -8,17 +8,22 @@ name: ci
 permissions:
   contents: read
 jobs:
-  vendored-release:
+  distribution:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24
       - name: Vendored files match the agent-hooks release named in the lock
         run: npm run check:release
         timeout-minutes: 5
-    timeout-minutes: 10
+      - name: Scan Git history for secrets
+        run: bash scripts/scan-secrets.sh
+        timeout-minutes: 5
+    timeout-minutes: 15
   plugin:
     strategy:
       fail-fast: false
@@ -27,12 +32,17 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
+        node:
+          - 24
+        include:
+          - os: ubuntu-latest
+            node: 22
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: 24
+          node-version: ${{ matrix.node }}
       - name: Vendored package, manifest, hooks and skills
         run: npm test
         shell: bash
@@ -53,6 +63,55 @@ jobs:
         shell: bash
         timeout-minutes: 10
     timeout-minutes: 20
+  remote-install:
+    if: ${{ github.event_name != 'pull_request' }}
+    needs:
+      - distribution
+      - plugin
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Install from the GitHub repository
+        env:
+          CODEX_HOME: ${{ runner.temp }}/codex-remote-home
+        run: |
+          mkdir -p "$CODEX_HOME"
+          gh auth setup-git
+          npm install --prefix .tools/codex-ci --no-audit --no-fund --no-save @openai/codex
+          npm exec --prefix .tools/codex-ci -- codex plugin marketplace add "$GITHUB_REPOSITORY"
+          npm exec --prefix .tools/codex-ci -- codex plugin add actera@actera
+          npm exec --prefix .tools/codex-ci -- codex plugin list
+          node scripts/check-plugin.mjs "$CODEX_HOME/plugins/cache/actera/actera/$(node -p "require('./plugins/actera/.codex-plugin/plugin.json').version")"
+        shell: bash
+        timeout-minutes: 10
+    timeout-minutes: 15
+  ci-result:
+    if: ${{ always() }}
+    needs:
+      - distribution
+      - plugin
+      - remote-install
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every selected check to pass
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          REMOTE: ${{ github.event_name != 'pull_request' }}
+        run: |
+          node <<'NODE'
+          const needs = JSON.parse(process.env.NEEDS);
+          const checks = { distribution: true, plugin: true, 'remote-install': process.env.REMOTE === 'true' };
+          for (const [job, required] of Object.entries(checks)) {
+            if (needs[job].result !== (required ? 'success' : 'skipped')) throw new Error(`${job}: ${needs[job].result}`);
+          }
+          NODE
+        timeout-minutes: 5
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}

@@ -9,8 +9,9 @@ Licensed under [Apache-2.0](LICENSE). The Actera service requires an account.
 
 ## Status
 
-Alpha. Tested with the Codex CLI 0.165 on Windows. Behavior and settings can change
-between minor versions before 1.0; see [CHANGELOG.md](CHANGELOG.md).
+Alpha. CI installs the plugin with the Codex CLI on Linux, macOS and Windows; host
+testing so far is on Windows with the Codex CLI 0.165 and later. Behavior and settings
+can change between minor versions before 1.0; see [CHANGELOG.md](CHANGELOG.md).
 
 ## Installation
 
@@ -76,24 +77,29 @@ read Codex's session details under `context.codex`, such as
 `context.codex.permission_mode` and `context.codex.cwd`. State lives under
 `~/.actera/codex`.
 
+See [operations](docs/operations.md) for status, reviewer linking, delivery,
+disconnecting and credential rotation.
+
+## Updates
+
+The marketplace follows `main`, and Codex caches the plugin by version. To update:
+
+```sh
+codex plugin marketplace upgrade actera
+codex plugin add actera@actera
+```
+
+Then trust the updated hooks in `/hooks` and start a new session. Codex keeps running
+the previous hooks until you do. See [installation checks](docs/installation-checks.md).
+
 ## Development
 
-```sh
-npm test
-npm run check:plugin
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks, local development against your
+own Actera API, and updating the vendored hook package. Development files stay outside
+the installed plugin; it contains the hooks, skills, MCP server, vendored bridge,
+scanner bundles and licenses.
 
-The hook bridge, pairing, scanner and delivery come from the agent-hooks package,
-vendored from a release under `plugins/actera/vendor/agent-hooks`. Only the core and
-the Codex adapter are vendored. `scripts/agent-hooks.lock.json` names the release and
-pins every file by SHA-256. Change them in that package and release it, then move this
-plugin to the release in the pull request that needs it:
+## Security
 
-```sh
-npm run vendor:agent-hooks -- --version <x.y.z>
-```
-
-To try an unreleased change, `npm run vendor:agent-hooks -- --from ../actera-agent-hooks`
-vendors a local checkout. CI refuses a lock from a local pack. CI also downloads the
-named release and checks the vendored files against it (`npm run check:release`), and
-warns when a newer release exists.
+Report vulnerabilities privately to [hello@actera.dev](mailto:hello@actera.dev). See
+[SECURITY.md](SECURITY.md) for what to include.
