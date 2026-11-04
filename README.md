@@ -54,10 +54,12 @@ blocked. In **Enforcing**:
 - You can review held calls in Codex too. The first held call offers to link Codex to
   your Actera account in the browser; after that, Codex asks you to allow each held call
   once or deny it. Actera checks that you may approve it and records your choice, and a
-  decision made in Actera meanwhile closes the prompt. `codex exec` and the `never`
-  approval policy cannot show prompts, so there the call waits for a reviewer as above. After 540 seconds without a decision
-  the call is denied with a link to review it, and an identical retry in the same
-  session within an hour reuses the approval once.
+  decision made in Actera meanwhile closes the prompt. Choosing to wait for a reviewer
+  holds the call as above. After 540 seconds without a decision the call is denied, and
+  an identical retry in the same session within an hour reuses the approval once.
+- Codex cannot show the prompt in Full access (approval policy `never`) or in
+  `codex exec`. There, and when you dismiss the prompt, the call is denied at once and
+  Codex tells you it needs approval in Actera. Retry it once it is approved.
 - When Actera cannot be reached, calls are denied unless you choose to fail open with
   `$actera-mode`.
 
