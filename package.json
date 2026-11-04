@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node scripts/vendor-agent-hooks.mjs --check && node --test test/unit/*.test.mjs",
     "check:plugin": "node scripts/check-plugin.mjs",
+    "check:release": "node scripts/vendor-agent-hooks.mjs --verify-release",
     "vendor:agent-hooks": "node scripts/vendor-agent-hooks.mjs"
   },
   "engines": {
