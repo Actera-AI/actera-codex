@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Vendors only the core and the Codex adapter of `@actera-ai/agent-hooks` 0.3.3, taken
+  from its published release. Behavior is unchanged.
+
 ## 0.2.1
 
 - A held call no longer leaves Codex on "thinking" for up to 540 seconds when Codex cannot

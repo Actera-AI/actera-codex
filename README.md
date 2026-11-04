@@ -84,6 +84,16 @@ npm run check:plugin
 ```
 
 The hook bridge, pairing, scanner and delivery come from the agent-hooks package,
-vendored under `plugins/actera/vendor/agent-hooks` and pinned by SHA-256 in
-`scripts/agent-hooks.lock.json`. Change them in that package, run `npm pack` there,
-then `npm run vendor:agent-hooks -- <archive.tgz>` here.
+vendored from a release under `plugins/actera/vendor/agent-hooks`. Only the core and
+the Codex adapter are vendored. `scripts/agent-hooks.lock.json` names the release and
+pins every file by SHA-256. Change them in that package and release it, then move this
+plugin to the release in the pull request that needs it:
+
+```sh
+npm run vendor:agent-hooks -- --version <x.y.z>
+```
+
+To try an unreleased change, `npm run vendor:agent-hooks -- --from ../actera-agent-hooks`
+vendors a local checkout. CI refuses a lock from a local pack. CI also downloads the
+named release and checks the vendored files against it (`npm run check:release`), and
+warns when a newer release exists.

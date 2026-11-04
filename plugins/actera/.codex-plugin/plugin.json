@@ -1,6 +1,6 @@
 {
   "name": "actera",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Check Codex tool calls against Actera policies, hold calls that need approval, and report their outcomes",
   "author": {
     "name": "Actera"
