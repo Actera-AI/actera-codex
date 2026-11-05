@@ -42,7 +42,7 @@ plugin never displays the key.
 | `$actera-connect [setup code]` | Connects this Codex to an Actera agent. `--reconnect` replaces an existing connection. |
 | `$actera-status` | Shows the connection, mode, whether the hooks run, and reports waiting to be sent. |
 | `$actera-mode` | Switches between Monitoring and Enforcing, and chooses what happens when Actera cannot evaluate. |
-| `$actera-disconnect` | Sends queued reports and removes this machine's connection. |
+| `$actera-disconnect` | Sends queued reports, ends the connection in Actera, and removes this machine's connection. |
 
 The default mode is **Monitoring**: every tool call creates a Decision and nothing is
 blocked. In **Enforcing**:
