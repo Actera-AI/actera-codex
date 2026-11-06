@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+- When a workspace reaches its monthly decisions, the plugin waits until Actera accepts
+  requests again instead of retrying every 30 seconds, and status explains why.
+- Vendors `@actera-ai/agent-hooks` 0.4.1.
+
 ## 0.2.3
 
 - `$actera-disconnect` also ends the connection in Actera, so the agent shows as
