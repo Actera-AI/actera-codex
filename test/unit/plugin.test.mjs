@@ -45,6 +45,10 @@ test('the marketplace lists this plugin and the manifest names its hooks file', 
   assert.equal(manifest.hooks, './hooks/hooks.json')
   assert.equal(manifest.mcpServers, './.mcp.json')
   assert.equal(manifest.skills, './skills/')
+  assert.equal(manifest.repository, 'https://github.com/Actera-AI/actera-codex')
+  // Catalogs that list Codex plugins require a plugin-relative icon of at most 50 KB.
+  const icon = await readFile(new URL('../../plugins/actera/' + manifest.interface.composerIcon, import.meta.url))
+  assert.ok(icon.length <= 50 * 1024, `composerIcon is ${icon.length} bytes`)
 })
 
 // Connect and status may be chosen by Codex from plain words; the skills that

@@ -9,7 +9,7 @@ import { lockedFiles } from './vendor-agent-hooks.mjs'
 
 const gitleaks = 'vendor/agent-hooks/vendor/gitleaks'
 export const pluginFiles = [
-  '.codex-plugin/plugin.json', 'LICENSE', 'NOTICE',
+  '.codex-plugin/plugin.json', 'LICENSE', 'NOTICE', 'assets/icon.png',
   '.mcp.json', 'bin/actera-hook.mjs', 'bin/actera-mcp.mjs', 'hooks/hooks.json',
   ...['connect', 'status', 'mode', 'disconnect'].flatMap(skill => [`skills/actera-${skill}/SKILL.md`, `skills/actera-${skill}/agents/openai.yaml`]),
   ...lockedFiles().map(file => `vendor/agent-hooks/${file}`),
