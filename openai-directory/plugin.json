@@ -65,13 +65,13 @@
             },
             {
               "description": "Draft and check a policy",
-              "prompt": "Draft a policy for the support agent that holds refunds over $500 for approval, with a test for a $600 refund and one for a $50 refund. Save it as a draft and check it, but don't publish.",
+              "prompt": "Draft a policy for the support agent that holds refunds over £500 for approval, with a test for a £600 refund and one for a £50 refund. Save it as a draft and check it, but don't publish.",
               "tools_triggered": "get_observed_fields, create_policy_draft, validate_policy_draft",
-              "expected_behavior": "Asks before saving, then saves a draft with a rule that requires approval when the refund amount is over 500 and the two tests, validates it, and reports that it is saved but not published, with a link to the draft."
+              "expected_behavior": "Saves a draft with a rule that requires approval when the refund amount is over 500 and the two tests, validates it, and reports that it is saved but not published, with a link to the draft."
             },
             {
               "description": "Simulate an action",
-              "prompt": "Under our current policies, would the support agent be allowed to issue a $1,000 refund?",
+              "prompt": "Under our current policies, would the support agent be allowed to issue a £1,000 refund?",
               "tools_triggered": "list_agents, simulate_action",
               "expected_behavior": "Finds the support agent, simulates a refund of 1000 against the live policies, and says whether it would be allowed, blocked or held, naming the deciding policy. Nothing is recorded as a real decision."
             }
