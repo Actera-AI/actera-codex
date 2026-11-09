@@ -92,6 +92,18 @@ codex plugin add actera@actera
 Then trust the updated hooks in `/hooks` and start a new session. Codex keeps running
 the previous hooks until you do. See [installation checks](docs/installation-checks.md).
 
+## OpenAI plugin directory
+
+OpenAI's plugin directory, shared by ChatGPT and Codex, does not accept plugins with
+hooks, so this plugin is installed from this repository as above. The directory gets
+a separate package in [`openai-directory`](openai-directory): Actera's remote MCP
+server at `https://mcp.actera.dev/mcp` and one skill, for reviewing agent activity and
+writing policies in conversation. It does not check tool calls. Build the upload with:
+
+```sh
+git archive --format=zip -o actera-openai-directory.zip HEAD:openai-directory
+```
+
 ## Development
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks, local development against your
