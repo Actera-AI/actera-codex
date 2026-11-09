@@ -47,9 +47,9 @@
           "positive": [
             {
               "description": "Summarize agent activity",
-              "prompt": "Which of my agents did the most this week, and what did Actera block?",
+              "prompt": "Which of my agents has done the most in Actera, and what did Actera block?",
               "tools_triggered": "summarize_decisions, search_decisions",
-              "expected_behavior": "Gives decision counts by agent for the last seven days, then lists the blocked decisions with each one's reason and a link to it in Actera."
+              "expected_behavior": "Gives decision counts by agent, then lists the blocked decisions with each one's reason and a link to it in Actera."
             },
             {
               "description": "List pending approvals",
