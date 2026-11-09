@@ -17,7 +17,7 @@
       "interface": {
         "displayName": "Actera",
         "shortDescription": "Guardrails for AI agents",
-        "longDescription": "Actera checks every action your AI agents try to take, such as a refund, a data export or a production deploy, against policies you set. Each action is allowed, blocked, or held until someone approves it, and every decision is recorded with the policy behind it.\n\nWith this plugin you can work with your Actera workspace in conversation:\n\n- See what your agents did, what was blocked and what is waiting for approval, with links to each decision in Actera.\n- Ask why an action was blocked or held.\n- Draft a policy from a real decision, add tests, check it and try actions against it before it applies.\n- Publish the policy and assign it to agents, if you are a workspace owner or admin.\n- Get the steps to connect Codex, Claude Code or your own agent.\n\nApprovals stay in Actera: the plugin gives you the link instead of approving. It acts as you, with your role in one workspace you choose when you connect. Changes are recorded in the workspace audit trail.\n\nRequires an Actera account. Free to start at actera.dev.",
+        "longDescription": "Actera checks every action your AI agents try to take, such as a refund, a data export or a production deploy, against policies you set. Each action is allowed, blocked, or held until someone approves it, and every decision is recorded with the policy behind it.\n\nWith this plugin you can work with your Actera workspace in conversation:\n\n- See what your agents did, what was blocked and what is waiting for approval, with links to each decision in Actera.\n- Ask why an action was blocked or held.\n- Draft a policy from a real decision, add tests, check it and try actions against it before it applies.\n- Publish the policy and assign it to agents, if you are a workspace owner or admin.\n- Get the steps to connect your agents to Actera.\n\nApprovals stay in Actera: the plugin gives you the link instead of approving. It acts as you, with your role in one workspace you choose when you connect. Changes are recorded in the workspace audit trail.\n\nRequires an Actera account.",
         "developerName": "Actera",
         "category": "Security",
         "capabilities": [
@@ -94,7 +94,7 @@
         "commerce": false
       },
       "publication": {
-        "release_notes": "First release: review agent activity and pending approvals, explain decisions, and draft, test and publish Actera policies from ChatGPT and Codex."
+        "release_notes": "First release: review agent activity and pending approvals, explain decisions, and draft, test and publish Actera policies in conversation."
       }
     }
   }
