@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.5
+
+- The plugin manifest names its repository and ships an Actera icon for the Codex
+  plugin list. Behavior is unchanged.
+
 ## 0.2.4
 
 - When a workspace reaches its monthly decisions, the plugin waits until Actera accepts
