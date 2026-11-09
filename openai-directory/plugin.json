@@ -1,0 +1,101 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "actera",
+  "version": "1.0.0",
+  "description": "Review what your AI agents did, see what is waiting for approval, and draft, test and publish Actera policies that allow, block or hold agent actions before they run.",
+  "author": {
+    "name": "Actera",
+    "email": "hello@actera.dev",
+    "url": "https://actera.dev"
+  },
+  "homepage": "https://docs.actera.dev/integrations/chatgpt/",
+  "repository": "https://github.com/Actera-AI/actera-codex",
+  "license": "Apache-2.0",
+  "keywords": ["ai-agents", "guardrails", "approvals", "policy", "governance", "audit"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Actera",
+        "shortDescription": "Guardrails for AI agents",
+        "longDescription": "Actera checks every action your AI agents try to take, such as a refund, a data export or a production deploy, against policies you set. Each action is allowed, blocked, or held until someone approves it, and every decision is recorded with the policy behind it.\n\nWith this plugin you can work with your Actera workspace in conversation:\n\n- See what your agents did, what was blocked and what is waiting for approval, with links to each decision in Actera.\n- Ask why an action was blocked or held.\n- Draft a policy from a real decision, add tests, check it and try actions against it before it applies.\n- Publish the policy and assign it to agents, if you are a workspace owner or admin.\n- Get the steps to connect Codex, Claude Code or your own agent.\n\nApprovals stay in Actera: the plugin gives you the link instead of approving. It acts as you, with your role in one workspace you choose when you connect. Changes are recorded in the workspace audit trail.\n\nRequires an Actera account. Free to start at actera.dev.",
+        "developerName": "Actera",
+        "category": "Security",
+        "capabilities": [
+          "Summarize what AI agents did and what was blocked",
+          "List actions waiting for approval, with links",
+          "Explain why an action was blocked or held",
+          "Draft, test and publish agent policies",
+          "Simulate whether an agent action would be allowed",
+          "Get the steps to connect an agent to Actera"
+        ],
+        "websiteURL": "https://actera.dev",
+        "supportURL": "https://actera.dev/contact",
+        "privacyPolicyURL": "https://actera.dev/legal/privacy-policy",
+        "termsOfServiceURL": "https://actera.dev/legal/terms-and-conditions",
+        "defaultPrompt": [
+          "What did my agents do this week, and what was blocked?",
+          "What is waiting for approval in Actera?",
+          "Draft a policy that holds refunds over $500 for approval"
+        ],
+        "brandColor": "#1C69B0",
+        "brandColorDark": "#5AA9F0",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/icon.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Summarize agent activity",
+              "prompt": "Which of my agents did the most this week, and what did Actera block?",
+              "tools_triggered": "summarize_decisions, search_decisions",
+              "expected_behavior": "Gives decision counts by agent for the last seven days, then lists the blocked decisions with each one's reason and a link to it in Actera."
+            },
+            {
+              "description": "List pending approvals",
+              "prompt": "What is waiting for approval in Actera, and why is each one held?",
+              "tools_triggered": "list_pending_approvals",
+              "expected_behavior": "Lists each decision waiting for approval with its agent, action, explanation and approval group, and links to approve it in Actera. It does not claim to approve anything."
+            },
+            {
+              "description": "Explain a blocked decision",
+              "prompt": "Find the most recent blocked action and explain why it was blocked.",
+              "tools_triggered": "search_decisions, get_decision",
+              "expected_behavior": "Finds the newest blocked decision, then names the policy and rule that blocked it, the action's inputs, and links to the decision."
+            },
+            {
+              "description": "Draft and check a policy",
+              "prompt": "Draft a policy for the support agent that holds refunds over $500 for approval, with a test for a $600 refund and one for a $50 refund. Save it as a draft and check it, but don't publish.",
+              "tools_triggered": "get_observed_fields, create_policy_draft, validate_policy_draft",
+              "expected_behavior": "Asks before saving, then saves a draft with a rule that requires approval when the refund amount is over 500 and the two tests, validates it, and reports that it is saved but not published, with a link to the draft."
+            },
+            {
+              "description": "Simulate an action",
+              "prompt": "Under our current policies, would the support agent be allowed to issue a $1,000 refund?",
+              "tools_triggered": "list_agents, simulate_action",
+              "expected_behavior": "Finds the support agent, simulates a refund of 1000 against the live policies, and says whether it would be allowed, blocked or held, naming the deciding policy. Nothing is recorded as a real decision."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unrelated coding request",
+              "prompt": "Write a Python function that checks whether a string is a palindrome."
+            },
+            {
+              "description": "Cloud permissions, not agent policies",
+              "prompt": "How do I give an AWS IAM role read-only access to one S3 bucket?"
+            },
+            {
+              "description": "General question about AI safety",
+              "prompt": "What are the main risks of letting AI agents run in production? Answer from general knowledge."
+            }
+          ]
+        },
+        "commerce": false
+      },
+      "publication": {
+        "release_notes": "First release: review agent activity and pending approvals, explain decisions, and draft, test and publish Actera policies from ChatGPT and Codex."
+      }
+    }
+  }
+}
