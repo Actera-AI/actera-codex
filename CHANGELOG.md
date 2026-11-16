@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.6
+
+- A held call whose wait has run out still checks its Decision once, so the denial names
+  where to review it and a review made meanwhile is not missed.
+- Settings of the wrong shape count as unreadable, and setting the mode again repairs them.
+  The other setting then returns to its default.
+- Vendors `@actera-ai/agent-hooks` 0.5.1.
+
 ## 0.2.5
 
 - The plugin manifest names its repository and ships an Actera icon for the Codex
